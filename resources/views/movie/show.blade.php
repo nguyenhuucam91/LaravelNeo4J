@@ -19,6 +19,10 @@
                         @endforeach
                     </ul>
                 </div>
+
+                <a href="{{ action('MovieController@index') }}">
+                    <button>Back to home</button>
+                </a>
             </div>
         </div>
     </div>

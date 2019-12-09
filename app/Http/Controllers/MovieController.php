@@ -12,7 +12,7 @@ class MovieController extends Controller
         $records = [];
         if ($request->query('search')) {
             $search = $request->query('search');
-            $result = Neo4jClient::run("MATCH (m:Movie) WHERE toLower(m.title) CONTAINS '${search}' return m");
+            $result = Neo4jClient::run("MATCH (m:Movie) WHERE toLower(m.title) CONTAINS toLower('${search}') return m");
             $records = $result->getRecords();
         }
         return view('movie.index', compact('records'));
