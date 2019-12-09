@@ -26,8 +26,9 @@ class MovieController extends Controller
         foreach($crew as $actor) {
             if ($actor->value('type(rel)') === 'ACTED_IN') {
                 $actorName = $actor->value('p.name');
-                $actedInCrews = Neo4jClient::run("MATCH (p:Person)-[rel:ACTED_IN]->(m:Movie) WHERE m.title = '${title}' AND p.name='${actorName}' return p.name, type(rel), rel.roles");
-                $crews[] = $actedInCrews->getRecord();
+                $actedInCrews = Neo4jClient::run("MATCH (p:Person)-[rel:ACTED_IN]->(m:Movie) WHERE m.title = '${title}' AND p.name='${actorName}' 
+                return p.name, type(rel), rel.roles");
+                $crews[] = $actedInCrews->getRecord(); //get first record matched only, if found, push to array
             }
             else {
                 $crews[] = $actor;
