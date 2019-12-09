@@ -7,15 +7,12 @@
                 <div class="card card-default">
                     <div class="card-header">{{ $title }}</div>
                     <ul>
-                        @foreach($crews as $actor)
-                            {{-- Check whether $actor has rel.roles or not, this is only available when role is 'ACTED_IN' --}}
-                            @if($actor->hasValue('rel.roles'))
-                                {{-- Implode will transform array to string, using connection symbol in the second parameter
-                                    ; for example: ['a','b'] => "a,b" --}}
-                                <li>{{ $actor->value('p.name') }} {{ $actor->value('type(rel)') }} {{ implode($actor->value('rel.roles'), ',') }}</li>
+                        @foreach($cast as $_cast)
+                            @if($_cast['role'] !== null)
+                                <li>{{ $_cast['name'] }} {{ $_cast['job'] }} as {{ $_cast['role'] }}</li>
                             @else
-                                <li>{{ $actor->value('p.name') }} {{ $actor->value('type(rel)') }}</li>
-                            @endif 
+                                <li>{{ $_cast['name'] }} {{ $_cast['job'] }}</li>
+                            @endif
                         @endforeach
                     </ul>
                 </div>

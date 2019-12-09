@@ -20,20 +20,32 @@ class MovieController extends Controller
 
     public function view($title)
     {
-        $result = Neo4jClient::run("MATCH (n:Movie)<-[rel]-(p:Person) WHERE n.title= '${title}' return type(rel),p.name");
-        $crew = $result->getRecords();
-        $crews = [];
-        foreach($crew as $actor) {
-            if ($actor->value('type(rel)') === 'ACTED_IN') {
-                $actorName = $actor->value('p.name');
-                $actedInCrews = Neo4jClient::run("MATCH (p:Person)-[rel:ACTED_IN]->(m:Movie) WHERE m.title = '${title}' AND p.name='${actorName}' 
-                return p.name, type(rel), rel.roles");
-                $crews[] = $actedInCrews->getRecord(); //get first record matched only, if found, push to array
-            }
-            else {
-                $crews[] = $actor;
+        // Get all movie which title is equal our selected title, then get all person has relationship
+        // with movie returned as m, then return any kind of relationship between them, as r,
+        //collect will transfer result to array
+        $result = Neo4jClient::run("MATCH (m:Movie) WHERE m.title = '${title}' 
+        OPTIONAL MATCH (m)<-[r]-(a:Person) RETURN m, type(r), collect({rel: r, actor: a}) as plays");
+
+        $output = [
+            'title' => $result->getRecord()->value('m')->title,
+            'cast' => []
+        ];
+
+        //loop through result and return plays, since we return plays in Cypher query
+        foreach($result->getRecords() as $record) {
+            foreach($record->value('plays') as $play) {
+                $actor = $play['actor']->value('name');
+                $job = $record->value('type(r)');
+                $output['cast'][] = [
+                    'job' => $job,
+                    'name' => $actor,
+                    //check if role is exist when we get, role is exist if role of actor is "ACTED_IN"
+                    'role' => array_key_exists('roles', $play['rel']->values()) ? implode($play['rel']->value('roles'), ",") : null
+                ];
             }
         }
-        return view('movie.show', compact('title', 'crews'));
+
+        $cast = $output['cast'];
+        return view('movie.show', compact('title', 'cast'));
     }
 }
