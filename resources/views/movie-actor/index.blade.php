@@ -14,20 +14,23 @@
             <tbody>
                 @foreach($cast as $_cast)
                     <tr>
-                        @if($_cast['role'] !== null)
-                            <td>{{ $_cast['name'] }} {{  }}</td>
-                        @else
-                            <td>{{ $_cast['name'] }}</td>
-                        @endif
-
+                        
+                        <td>{{ $_cast['name'] }}</td>
+                
                         <td>
-                            <select>
-                                @foreach($roles as $key => $role)
-                                    <option value="{{ $key }}" {{ $_cast }}>{{ $role }}</option>
-                                @endforeach
-                            </select>
+                            {{ $_cast['job'] }}
                         </td>
-                        <td>2</td>
+                        <td>
+                            <form class="form-inline" action="{{ action('MovieActorController@update', ['id' => $_cast['id']]) }}" method="POST">
+                                @method('PUT')
+                                @csrf
+                                <input type="hidden" name="film_id" value="{{ $id }}"/>
+                                @if ($_cast['role'] !== null)
+                                    <input name="as_role" value="{{ $_cast['role'] }}" class="form-control"/>
+                                    <button>Update</button>
+                                @endif
+                            </form>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

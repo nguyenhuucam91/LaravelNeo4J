@@ -18,3 +18,5 @@ Route::get('/', 'MovieController@index');
 Route::resource('/movies', 'MovieController');
 
 Route::get('/movie-actor/{id}', 'MovieActorController@index');
+
+Route::put('/movie-actor/{id}', 'MovieActorController@update');
