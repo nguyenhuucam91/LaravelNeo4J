@@ -3,9 +3,9 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-12">
             <div class="card card-default">
-                <div class="card-header">Search Results</div>
+                <div class="card-header">Movies</div>
                 <table id="results" class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -28,18 +28,6 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
-        </div>
-
-
-        <div class="col-md-7">
-            <div class="card card-default">
-                <div class="card-header" id="title">Details</div>
-                <div class="row">
-                    <div class="col">
-                        <h4>Crew</h4>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
