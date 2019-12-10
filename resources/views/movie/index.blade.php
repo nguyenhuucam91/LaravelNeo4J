@@ -15,6 +15,7 @@
                             <th>Movie</th>
                             <th>Released</th>
                             <th>Tagline</th>
+                            <th>Actors</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -24,6 +25,7 @@
                                 <td>{{ $record->get('m')->title }}</td>
                                 <td>{{ $record->get('m')->released }}</td>
                                 <td>{{ array_key_exists('tagline', $record->get('m')->values()) ? $record->get('m')->tagline : '' }}</td>
+                                <td><a href="{{ action('MovieActorController@index', ['id' => $record->get('id(m)')]) }}">Actors</a></td>
                                 <td>
                                     <a href="{{ action('MovieController@show', ['movie' => $record->get('id(m)') ]) }}">View</a>
                                     <a href="{{ action('MovieController@edit', ['movie' => $record->get('id(m)') ]) }}">Edit</a>

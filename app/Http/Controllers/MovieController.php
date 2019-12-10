@@ -14,7 +14,7 @@ class MovieController extends Controller
         $query = "";
         if ($request->query('search')) {
             $search = $request->query('search');
-            $query = "MATCH (m:Movie) WHERE toLower(m.title) CONTAINS toLower('${search}') return m";
+            $query = "MATCH (m:Movie) WHERE toLower(m.title) CONTAINS toLower('${search}') return id(m),m";
         }
         else {
             $query = "MATCH (m:Movie) return id(m),m ORDER BY m.released DESC";
