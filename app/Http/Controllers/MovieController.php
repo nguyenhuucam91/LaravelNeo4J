@@ -25,13 +25,13 @@ class MovieController extends Controller
         return view('movie.index', compact('records'));
     }
 
-    public function show($title)
+    public function show($id)
     {
-        // Get all movie which title is equal our selected title, then get all person has relationship
+        // Get all movie which id is equal our selected id, then get all person has relationship
         // with movie returned as m, then return any kind of relationship between them, as r,
         //collect will transfer result to array
-        $result = Neo4jClient::run("MATCH (m:Movie) WHERE m.title = '${title}' 
-        OPTIONAL MATCH (m)<-[r]-(a:Person) RETURN m, type(r), collect({rel: r, actor: a}) as plays");
+        $query = "MATCH (m:Movie) WHERE id(m) = ${id} OPTIONAL MATCH (m)<-[r]-(a:Person) RETURN m, type(r), collect({rel: r, actor: a}) as plays";
+        $result = Neo4jClient::run($query);
 
         $output = [
             'title' => $result->getRecord()->value('m')->title,
@@ -53,7 +53,8 @@ class MovieController extends Controller
         }
 
         $cast = $output['cast'];
-        return view('movie.show', compact('title', 'cast'));
+        $title = $output['title'];
+        return view('movie.show', compact('title','cast'));
     }
 
     public function create()
@@ -72,10 +73,29 @@ class MovieController extends Controller
         return redirect()->action('MovieController@index');
     }
 
+    public function edit($id)
+    {
+        $query = "MATCH (m:Movie) WHERE id(m)=$id return m";
+        $result = Neo4jClient::run($query);
+        $movie = $result->getRecord();
+        return view('movie.edit', compact('id','movie'));
+    }
+
+    public function update($id, Request $request)
+    {
+        $movie = Movie::NODE_NAME;
+        $title = $request->input('title');
+        $released = $request->input('released');
+        $tagline = $request->input('tagline');
+        $query = "MATCH (m:${movie})  WHERE id(m) = $id SET m.title='$title', m.released=$released, m.tagline='$tagline'";
+        Neo4jClient::run($query);
+        return redirect()->action('MovieController@index');
+    }
+
     public function destroy($id) 
     {
         $movie = Movie::NODE_NAME;
-        $query = "MATCH (m:${movie}) WHERE id(m) = $id DETACH DELETE m";
+        $query = "MATCH (m:${movie}) WHERE id(m) = $id DETACH DELETE m"; //remove node and relationship of m
         Neo4jClient::run($query);
         return redirect()->action('MovieController@index');
     }

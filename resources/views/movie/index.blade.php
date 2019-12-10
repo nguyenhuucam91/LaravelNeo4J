@@ -25,7 +25,8 @@
                                 <td>{{ $record->get('m')->released }}</td>
                                 <td>{{ array_key_exists('tagline', $record->get('m')->values()) ? $record->get('m')->tagline : '' }}</td>
                                 <td>
-                                    <a href="{{ action('MovieController@show', ['title' => $record->get('m')->title ]) }}">View</a>
+                                    <a href="{{ action('MovieController@show', ['movie' => $record->get('id(m)') ]) }}">View</a>
+                                    <a href="{{ action('MovieController@edit', ['movie' => $record->get('id(m)') ]) }}">Edit</a>
                                     <a href="javascript:void(0)" onclick="document.getElementById('delete-{{ $record->get('id(m)') }}').submit()">Delete</a>
                                     <form id="delete-{{ $record->get('id(m)') }}" action="{{ action('MovieController@destroy', ['movie' => $record->get('id(m)')]) }}" method="POST">
                                         @method('DELETE')
