@@ -4,6 +4,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <a href="{{ action('MovieController@create') }}">
+                <button class="btn btn-primary">Create</button>
+            </a>
             <div class="card card-default">
                 <div class="card-header">Movies</div>
                 <table id="results" class="table table-striped table-hover">
@@ -20,9 +23,14 @@
                             <tr>
                                 <td>{{ $record->get('m')->title }}</td>
                                 <td>{{ $record->get('m')->released }}</td>
-                                <td>{{ $record->get('m')->tagline }}</td>
+                                <td>{{ array_key_exists('tagline', $record->get('m')->values()) ? $record->get('m')->tagline : '' }}</td>
                                 <td>
-                                    <a href="{{ action('MovieController@view', ['title' => $record->get('m')->title ]) }}">View</a>
+                                    <a href="{{ action('MovieController@show', ['title' => $record->get('m')->title ]) }}">View</a>
+                                    <a href="javascript:void(0)" onclick="document.getElementById('delete-{{ $record->get('id(m)') }}').submit()">Delete</a>
+                                    <form id="delete-{{ $record->get('id(m)') }}" action="{{ action('MovieController@destroy', ['movie' => $record->get('id(m)')]) }}" method="POST">
+                                        @method('DELETE')
+                                        @csrf
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

@@ -15,4 +15,4 @@ use TSF\Neo4jClient\Facades\Neo4jClient;
 
 Route::get('/', 'MovieController@index');
 
-Route::get('/movies/{title}', 'MovieController@view');
+Route::resource('/movies', 'MovieController');
